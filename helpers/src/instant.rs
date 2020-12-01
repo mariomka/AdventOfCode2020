@@ -22,7 +22,7 @@ pub mod fake {
     use std::time::Duration;
 
     thread_local! {
-        pub static FAKE_ELAPSED: Cell<Duration> = Cell::new(Duration::default());
+        static FAKE_ELAPSED: Cell<Duration> = Cell::new(Duration::default());
     }
 
     pub fn with_fake_elapsed(duration: Duration) {
@@ -31,8 +31,6 @@ pub mod fake {
 
     #[derive(Debug, Copy, Clone, PartialEq, PartialOrd, Eq, Ord, Hash)]
     pub struct Instant;
-
-    impl Instant {}
 
     impl super::BasicInstant for Instant {
         fn now() -> Self {
