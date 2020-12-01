@@ -26,7 +26,8 @@ jobs:
       - name: Run tests
         uses: actions-rs/cargo@v1
         with:
-          command: test --manifest-path=./day1/Cargo.toml
+          command: test
+          args: --manifest-path=./day1/Cargo.toml
 
       - name: Check format
         uses: actions-rs/cargo@v1
