@@ -32,7 +32,7 @@ pub fn part2(input: &HashSet<u64>) -> u64 {
 
 #[cfg(test)]
 mod tests {
-    use helpers::parse_input_hashset;
+    use helpers::parse_input;
 
     use super::*;
 
@@ -45,7 +45,7 @@ mod tests {
 675
 1456
 ";
-        parse_input_hashset(input)
+        parse_input(input)
     }
 
     #[test]
