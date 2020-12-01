@@ -30,6 +30,6 @@ jobs:
 
       - name: Check format
         uses: actions-rs/cargo@v1
-          with:
-            command: fmt
-            args: -- --check
+        with:
+          command: fmt
+          args: -- --check
