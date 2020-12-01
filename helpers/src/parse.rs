@@ -4,7 +4,7 @@ use std::str::FromStr;
 
 pub fn parse_input<T: FromStr, R>(input: &str) -> R
 where
-    <T as FromStr>::Err: Debug,
+    T::Err: Debug,
     R: FromIterator<T>,
 {
     input
