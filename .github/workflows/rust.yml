@@ -59,3 +59,28 @@ jobs:
         with:
           command: fmt
           args: --manifest-path=./day1/Cargo.toml -- --check
+
+  day2:
+    name: Day 2
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install latest stable
+        uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          components: rustfmt
+
+      - name: Run tests
+        uses: actions-rs/cargo@v1
+        with:
+          command: test
+          args: --manifest-path=./day2/Cargo.toml
+
+      - name: Check format
+        uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --manifest-path=./day2/Cargo.toml -- --check
