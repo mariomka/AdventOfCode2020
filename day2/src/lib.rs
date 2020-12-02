@@ -11,7 +11,7 @@ struct Password {
 }
 
 impl Password {
-    pub fn from_line(line: &String) -> Password {
+    fn from_line(line: &String) -> Password {
         lazy_static! {
             static ref REGEX: Regex = Regex::new(
                 r"^(?P<num1>\d{1,2})-(?P<num2>\d{1,2}) (?P<char>[a-z]): (?P<password>[a-z]+)$"
@@ -29,13 +29,13 @@ impl Password {
         }
     }
 
-    pub fn is_valid_first_policy(&self) -> bool {
+    fn is_valid_first_policy(&self) -> bool {
         let char_count = self.password.matches(self.char).count();
 
         char_count >= self.num1 && char_count <= self.num2
     }
 
-    pub fn is_valid_second_policy(&self) -> bool {
+    fn is_valid_second_policy(&self) -> bool {
         let first_char = self.password.chars().nth(self.num1 - 1).unwrap();
         let second_char = self.password.chars().nth(self.num2 - 1).unwrap();
 
