@@ -3,15 +3,15 @@ extern crate lazy_static;
 use regex::Regex;
 
 #[derive(Debug)]
-struct Password {
+struct Password<'a> {
     num1: usize,
     num2: usize,
     char: char,
-    password: String,
+    password: &'a str,
 }
 
-impl Password {
-    fn from_line(line: &String) -> Password {
+impl Password<'_> {
+    fn from_line(line: &str) -> Password {
         lazy_static! {
             static ref REGEX: Regex = Regex::new(
                 r"^(?P<num1>\d{1,2})-(?P<num2>\d{1,2}) (?P<char>[a-z]): (?P<password>[a-z]+)$"
@@ -25,7 +25,7 @@ impl Password {
             num1: captures.name("num1").unwrap().as_str().parse().unwrap(),
             num2: captures.name("num2").unwrap().as_str().parse().unwrap(),
             char: captures.name("char").unwrap().as_str().parse().unwrap(),
-            password: captures.name("password").unwrap().as_str().parse().unwrap(),
+            password: captures.name("password").unwrap().as_str(),
         }
     }
 
@@ -43,7 +43,7 @@ impl Password {
     }
 }
 
-pub fn part1(input: &Vec<String>) -> usize {
+pub fn part1(input: &Vec<&str>) -> usize {
     input
         .iter()
         .map(|line| Password::from_line(line))
@@ -51,7 +51,7 @@ pub fn part1(input: &Vec<String>) -> usize {
         .count()
 }
 
-pub fn part2(input: &Vec<String>) -> usize {
+pub fn part2(input: &Vec<&str>) -> usize {
     input
         .iter()
         .map(|line| Password::from_line(line))
@@ -61,17 +61,17 @@ pub fn part2(input: &Vec<String>) -> usize {
 
 #[cfg(test)]
 mod tests {
-    use helpers::parse_input;
+    use helpers::input_lines;
 
     use super::*;
 
-    fn input() -> Vec<String> {
+    fn input<'a>() -> Vec<&'a str> {
         let input = "
 1-3 a: abcde
 1-3 b: cdefg
 2-9 c: ccccccccc
 ";
-        parse_input(input)
+        input_lines(input)
     }
 
     #[test]

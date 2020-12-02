@@ -1,6 +1,7 @@
-pub use parse::parse_input;
+pub use input::input_lines;
+pub use input::parse_input;
 pub use run::run;
 
+mod input;
 mod instant;
-mod parse;
 mod run;

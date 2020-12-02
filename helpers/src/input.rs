@@ -2,6 +2,17 @@ use std::fmt::Debug;
 use std::iter::FromIterator;
 use std::str::FromStr;
 
+pub fn input_lines<'a, R>(input: &'a str) -> R
+where
+    R: FromIterator<&'a str>,
+{
+    input
+        .lines()
+        .map(|line| line.trim())
+        .filter(|line| false == line.is_empty())
+        .collect()
+}
+
 pub fn parse_input<T: FromStr, R>(input: &str) -> R
 where
     T::Err: Debug,
@@ -19,6 +30,39 @@ where
 mod tests {
     use super::*;
     use std::collections::HashSet;
+
+    #[test]
+    fn test_input_lines_to_vec() {
+        let input = "
+            1-3 a: abcde
+            1-3 b: cdefg
+
+            2-9 c: ccccccccc
+        ";
+
+        let result: Vec<&str> = input_lines(input);
+
+        let expected: Vec<&str> = Vec::from(["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"]);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_input_lines_to_hashset() {
+        let input = "
+            1-3 a: abcde
+            1-3 b: cdefg
+
+            2-9 c: ccccccccc
+        ";
+
+        let result: HashSet<&str> = input_lines(input);
+
+        let expected: HashSet<&str> = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"]
+            .iter()
+            .cloned()
+            .collect();
+        assert_eq!(result, expected);
+    }
 
     #[test]
     fn test_parse_input_to_vec() {
