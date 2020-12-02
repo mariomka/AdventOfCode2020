@@ -8,8 +8,10 @@ where
     R: FromIterator<T>,
 {
     input
-        .split_ascii_whitespace()
-        .map(|line: &str| line.parse().unwrap())
+        .lines()
+        .map(|line| line.trim())
+        .filter(|line| false == line.is_empty())
+        .map(|line| line.parse().unwrap())
         .collect()
 }
 
