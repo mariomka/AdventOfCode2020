@@ -39,7 +39,7 @@ impl Password<'_> {
         let first_char = self.password.chars().nth(self.num1 - 1).unwrap();
         let second_char = self.password.chars().nth(self.num2 - 1).unwrap();
 
-        (self.char != first_char) != (self.char != second_char)
+        (self.char == first_char) != (self.char == second_char)
     }
 }
 
