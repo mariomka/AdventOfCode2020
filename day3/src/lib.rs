@@ -1,22 +1,19 @@
 fn count_trees(input: &Vec<&str>, right: usize, bottom: usize) -> usize {
-    let mut position = (1usize, 1usize);
+    let mut position = (0usize, 0usize);
     let mut trees = 0;
 
     let width = input.get(0).unwrap().len();
+    let height = input.len();
 
     loop {
-        position = (position.0 + right, position.1 + bottom);
+        position = ((position.0 + right) % width, position.1 + bottom);
 
-        if position.1 > input.len() {
+        if position.1 >= height {
             break;
         }
 
-        if position.0 > width {
-            position.0 = position.0 % width;
-        }
-
-        let line = input.get(position.1 - 1).unwrap();
-        let square = line.chars().nth(position.0 - 1).unwrap();
+        let line = input.get(position.1).unwrap();
+        let square = line.chars().nth(position.0).unwrap();
 
         if '#' == square {
             trees += 1;
