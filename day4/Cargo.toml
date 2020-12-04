@@ -1,0 +1,9 @@
+[package]
+name = "day4"
+version = "0.1.0"
+authors = ["Mario Juarez <mario@mjp.one>"]
+edition = "2018"
+
+[dependencies]
+helpers = { path = "../helpers" }
+regex = "1.4.2"
