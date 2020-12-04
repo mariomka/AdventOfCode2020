@@ -13,6 +13,17 @@ where
         .collect()
 }
 
+pub fn split_input<'a, R>(input: &'a str, pattern: &str) -> R
+where
+    R: FromIterator<&'a str>,
+{
+    input
+        .split(pattern)
+        .map(|line| line.trim())
+        .filter(|line| false == line.is_empty())
+        .collect()
+}
+
 pub fn parse_input<T: FromStr, R>(input: &str) -> R
 where
     T::Err: Debug,
@@ -28,8 +39,9 @@ where
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use std::collections::HashSet;
+
+    use super::*;
 
     #[test]
     fn test_input_lines_to_vec() {
@@ -56,6 +68,41 @@ mod tests {
         ";
 
         let result: HashSet<&str> = input_lines(input);
+
+        let expected: HashSet<&str> = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"]
+            .iter()
+            .cloned()
+            .collect();
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_split_lines_to_vec() {
+        let input = "
+            1-3 a: abcde
+
+            1-3 b: cdefg
+
+            2-9 c: ccccccccc
+        ";
+
+        let result: Vec<&str> = split_input(input, "\n\n");
+
+        let expected: Vec<&str> = Vec::from(["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"]);
+        assert_eq!(result, expected);
+    }
+
+    #[test]
+    fn test_split_lines_to_hashset() {
+        let input = "
+            1-3 a: abcde
+
+            1-3 b: cdefg
+
+            2-9 c: ccccccccc
+        ";
+
+        let result: HashSet<&str> = split_input(input, "\n\n");
 
         let expected: HashSet<&str> = ["1-3 a: abcde", "1-3 b: cdefg", "2-9 c: ccccccccc"]
             .iter()
