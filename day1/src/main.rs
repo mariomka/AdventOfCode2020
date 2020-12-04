@@ -4,6 +4,6 @@ use std::collections::HashSet;
 fn main() {
     let input: HashSet<u64> = parse_input(include_str!("../input.txt"));
 
-    run("part1", &input, day1::part1);
-    run("part2", &input, day1::part2);
+    run("part1", || day1::part1(&input));
+    run("part2", || day1::part2(&input));
 }
