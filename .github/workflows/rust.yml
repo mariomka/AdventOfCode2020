@@ -35,9 +35,13 @@ jobs:
           command: fmt
           args: --manifest-path=./helpers/Cargo.toml -- --check
 
-  day1:
-    name: Day 1
+  days:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        day: [ 1, 2, 3, 4, 5, 6 ]
+
+    name: Day ${{ matrix.day }}
     steps:
       - uses: actions/checkout@v2
 
@@ -52,135 +56,10 @@ jobs:
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --manifest-path=./day1/Cargo.toml
+          args: --manifest-path=./day${{ matrix.day }}/Cargo.toml
 
       - name: Check format
         uses: actions-rs/cargo@v1
         with:
           command: fmt
-          args: --manifest-path=./day1/Cargo.toml -- --check
-
-  day2:
-    name: Day 2
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install latest stable
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
-
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=./day2/Cargo.toml
-
-      - name: Check format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --manifest-path=./day2/Cargo.toml -- --check
-
-  day3:
-    name: Day 3
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install latest stable
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
-
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=./day3/Cargo.toml
-
-      - name: Check format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --manifest-path=./day3/Cargo.toml -- --check
-
-  day4:
-    name: Day 4
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install latest stable
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
-
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=./day4/Cargo.toml
-
-      - name: Check format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --manifest-path=./day4/Cargo.toml -- --check
-
-  day5:
-    name: Day 5
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install latest stable
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
-
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=./day5/Cargo.toml
-
-      - name: Check format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --manifest-path=./day5/Cargo.toml -- --check
-
-  day6:
-    name: Day 6
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install latest stable
-        uses: actions-rs/toolchain@v1
-        with:
-          profile: minimal
-          toolchain: stable
-          components: rustfmt
-
-      - name: Run tests
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --manifest-path=./day6/Cargo.toml
-
-      - name: Check format
-        uses: actions-rs/cargo@v1
-        with:
-          command: fmt
-          args: --manifest-path=./day6/Cargo.toml -- --check
+          args: --manifest-path=./day${{ matrix.day }}/Cargo.toml -- --check
