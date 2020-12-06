@@ -63,3 +63,9 @@ jobs:
         with:
           command: fmt
           args: --manifest-path=./day${{ matrix.day }}/Cargo.toml -- --check
+
+      - name: Run
+        uses: actions-rs/cargo@v1
+        with:
+          command: run
+          args: --manifest-path=./day${{ matrix.day }}/Cargo.toml --release
