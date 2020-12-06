@@ -7,12 +7,3 @@ mod debug;
 mod input;
 mod instant;
 mod run;
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn test_debug() {
-        let a = "hola";
-        debug!(a, "hola2");
-    }
-}
