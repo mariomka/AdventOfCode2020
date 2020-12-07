@@ -53,7 +53,7 @@ pub fn part1(input: &Vec<&str>) -> usize {
     let mut colors = vec!["shiny gold"];
 
     loop {
-        let mut new_colors = vec![];
+        let mut new_colors = Vec::new();
 
         for (bag_color, bag) in bags.iter() {
             if false == colors.contains(bag_color)
@@ -83,7 +83,7 @@ pub fn part2(input: &Vec<&str>) -> u32 {
     let mut colors = vec![(1u32, "shiny gold")];
 
     loop {
-        let mut new_colors = vec![];
+        let mut new_colors = Vec::new();
 
         for (multiplier, color) in colors.iter() {
             let bag = bags.get(color).unwrap();
