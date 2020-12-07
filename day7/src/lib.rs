@@ -56,20 +56,13 @@ pub fn part1(input: &Vec<&str>) -> usize {
         let mut new_colors = vec![];
 
         for (bag_color, bag) in bags.iter() {
-            if colors.contains(bag_color) {
-                continue;
-            }
-
-            for color in colors.iter() {
-                if false == new_colors.contains(bag_color)
-                    && bag
-                        .children
-                        .iter()
-                        .find(|child| *color == child.color)
-                        .is_some()
-                {
-                    new_colors.push(*bag_color);
-                }
+            if false == colors.contains(bag_color)
+                && bag
+                    .children
+                    .iter()
+                    .any(|child| colors.contains(&child.color))
+            {
+                new_colors.push(*bag_color);
             }
         }
 
