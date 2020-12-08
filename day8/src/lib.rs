@@ -65,23 +65,18 @@ impl Iterator for Interpreter {
 
     fn next(&mut self) -> Option<Self::Item> {
         let instruction = self.instructions.get(self.pointer)?;
-        let mut increase_pointer = true;
 
         match instruction.operation {
             Operation::Acc => {
                 self.accumulator += instruction.argument;
+                self.pointer += 1;
             }
             Operation::Jmp => {
                 self.pointer = (self.pointer as i32 + instruction.argument) as usize;
-                increase_pointer = false;
             }
             Operation::Nop => {
-                //
+                self.pointer += 1;
             }
-        }
-
-        if increase_pointer {
-            self.pointer += 1;
         }
 
         Some(())
