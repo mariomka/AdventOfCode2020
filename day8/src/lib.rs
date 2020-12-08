@@ -111,10 +111,10 @@ pub fn part2(input: &Vec<&str>) -> i32 {
         }
     }
 
+    let mut interpreter = Interpreter::new(input);
     let mut replace_index = None;
 
     'outer: loop {
-        let mut interpreter = Interpreter::new(input);
         interpreter.reset();
 
         // Revert previous replace
