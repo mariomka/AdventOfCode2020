@@ -92,7 +92,7 @@ pub fn part1(input: &Vec<&str>) -> i32 {
     let mut interpreter = Interpreter::new(input);
     let mut visited: HashSet<usize> = HashSet::new();
 
-    while interpreter.next().is_some() {
+    while let Some(_) = interpreter.next() {
         if visited.contains(&interpreter.pointer) {
             break;
         }
@@ -143,7 +143,7 @@ pub fn part2(input: &Vec<&str>) -> i32 {
 
         // Run interpreter
         let mut visited: HashSet<usize> = HashSet::new();
-        while interpreter.next().is_some() {
+        while let Some(_) = interpreter.next() {
             if visited.contains(&interpreter.pointer) {
                 continue 'outer;
             }
