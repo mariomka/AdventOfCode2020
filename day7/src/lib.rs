@@ -5,6 +5,8 @@ use std::collections::HashMap;
 
 use regex::{Captures, Regex};
 
+pub mod graphs;
+
 #[derive(Debug)]
 struct Bag<'a> {
     children: Vec<Child<'a>>,

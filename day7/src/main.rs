@@ -5,4 +5,7 @@ fn main() {
 
     run("part1", || day7::part1(&input));
     run("part2", || day7::part2(&input));
+
+    run("graphs::part1", || day7::graphs::part1(&input));
+    run("graphs::part2", || day7::graphs::part2(&input));
 }
