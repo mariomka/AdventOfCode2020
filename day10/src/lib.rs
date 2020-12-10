@@ -1,65 +1,57 @@
-use std::collections::HashMap;
+pub fn prepare_input(input: &Vec<usize>) -> Vec<usize> {
+    let mut prepared = input.clone();
+    prepared.push(0usize);
+    prepared.sort();
+    prepared.push(prepared.last().unwrap() + 3);
+
+    prepared
+}
 
 pub fn part1(input: &Vec<usize>) -> usize {
-    let mut jolts = input.clone();
-    jolts.push(jolts.iter().max().unwrap() + 3);
-    jolts.sort();
+    let input = prepare_input(input);
 
-    let mut jolt_differences = [0usize, 0usize, 0usize];
-    let mut current_jolt = 0;
+    let mut jolt_differences = (0usize, 0usize);
 
-    for jolt in jolts.iter() {
-        let jolt_difference = jolt - current_jolt;
-
-        match jolt_difference {
+    for jolt_window in input.windows(2) {
+        match jolt_window[1] - jolt_window[0] {
             1 => {
-                jolt_differences[0] += 1;
-            }
-            2 => {
-                jolt_differences[1] += 1;
+                jolt_differences.0 += 1;
             }
             3 => {
-                jolt_differences[2] += 1;
+                jolt_differences.1 += 1;
             }
             _ => {
                 unreachable!();
             }
         }
-
-        current_jolt += jolt_difference;
     }
 
-    jolt_differences[0] * jolt_differences[2]
+    jolt_differences.0 * jolt_differences.1
 }
 
 pub fn part2(input: &Vec<usize>) -> usize {
-    let mut jolts = input.clone();
+    let input = prepare_input(input);
 
-    let last_jolt = jolts.iter().max().unwrap() + 3;
-    jolts.push(0usize);
-    jolts.push(last_jolt);
-    jolts.sort();
+    let mut counts = vec![0usize; input.last().unwrap() + 1];
+    counts[0] = 1;
 
-    let mut cache: HashMap<usize, usize> = HashMap::new();
-    cache.insert(0, 1);
-
-    for jolt in jolts.into_iter().skip(1) {
+    for jolt in input.into_iter().skip(1) {
         let mut count = 0;
 
         if jolt >= 3 {
-            count += cache.get(&(jolt - 3)).unwrap_or(&0usize);
+            count += counts[jolt - 3];
         }
 
         if jolt >= 2 {
-            count += cache.get(&(jolt - 2)).unwrap_or(&0usize);
+            count += counts[jolt - 2];
         }
 
-        count += cache.get(&(jolt - 1)).unwrap_or(&0usize);
+        count += counts[jolt - 1];
 
-        cache.insert(jolt, count);
+        counts[jolt] = count;
     }
 
-    *cache.get(&last_jolt).unwrap()
+    *counts.last().unwrap()
 }
 
 #[cfg(test)]
