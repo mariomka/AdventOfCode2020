@@ -45,7 +45,7 @@ impl Display for Cell {
 type Matrix = Vec<Vec<Cell>>;
 
 struct Map {
-    matrix: Vec<Vec<Cell>>,
+    matrix: Matrix,
     height: i32,
     width: i32,
 }
