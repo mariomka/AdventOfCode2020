@@ -32,13 +32,13 @@ impl CardinalPoint {
 
 #[derive(Debug)]
 enum ActionType {
-    North,
-    South,
-    East,
-    West,
-    Left,
-    Right,
-    Forward,
+    MoveNorth,
+    MoveSouth,
+    MoveEast,
+    MoveWest,
+    RotateLeft,
+    RotateRight,
+    MoveForward,
 }
 
 impl FromStr for ActionType {
@@ -46,13 +46,13 @@ impl FromStr for ActionType {
 
     fn from_str(input: &str) -> Result<ActionType, Self::Err> {
         match input {
-            "N" => Ok(ActionType::North),
-            "S" => Ok(ActionType::South),
-            "E" => Ok(ActionType::East),
-            "W" => Ok(ActionType::West),
-            "L" => Ok(ActionType::Left),
-            "R" => Ok(ActionType::Right),
-            "F" => Ok(ActionType::Forward),
+            "N" => Ok(ActionType::MoveNorth),
+            "S" => Ok(ActionType::MoveSouth),
+            "E" => Ok(ActionType::MoveEast),
+            "W" => Ok(ActionType::MoveWest),
+            "L" => Ok(ActionType::RotateLeft),
+            "R" => Ok(ActionType::RotateRight),
+            "F" => Ok(ActionType::MoveForward),
             _ => Err(()),
         }
     }
@@ -128,31 +128,31 @@ pub fn part1(input: &Vec<&str>) -> i32 {
         let action: Action = line.parse().unwrap();
 
         match action.action_type {
-            ActionType::North => {
+            ActionType::MoveNorth => {
                 ship_position.y += action.value;
             }
-            ActionType::South => {
+            ActionType::MoveSouth => {
                 ship_position.y -= action.value;
             }
-            ActionType::East => {
+            ActionType::MoveEast => {
                 ship_position.x += action.value;
             }
-            ActionType::West => {
+            ActionType::MoveWest => {
                 ship_position.x -= action.value;
             }
-            ActionType::Left => match action.value {
+            ActionType::RotateLeft => match action.value {
                 90 => ship_position.rotate(-1),
                 180 => ship_position.rotate(-2),
                 270 => ship_position.rotate(-3),
                 _ => unreachable!(),
             },
-            ActionType::Right => match action.value {
+            ActionType::RotateRight => match action.value {
                 90 => ship_position.rotate(1),
                 180 => ship_position.rotate(2),
                 270 => ship_position.rotate(3),
                 _ => unreachable!(),
             },
-            ActionType::Forward => match ship_position.face {
+            ActionType::MoveForward => match ship_position.face {
                 CardinalPoint::North => {
                     ship_position.y += action.value;
                 }
@@ -184,31 +184,31 @@ pub fn part2(input: &Vec<&str>) -> i32 {
         let action: Action = line.parse().unwrap();
 
         match action.action_type {
-            ActionType::North => {
+            ActionType::MoveNorth => {
                 waypoint_position.y += action.value;
             }
-            ActionType::South => {
+            ActionType::MoveSouth => {
                 waypoint_position.y -= action.value;
             }
-            ActionType::East => {
+            ActionType::MoveEast => {
                 waypoint_position.x += action.value;
             }
-            ActionType::West => {
+            ActionType::MoveWest => {
                 waypoint_position.x -= action.value;
             }
-            ActionType::Left => match action.value {
+            ActionType::RotateLeft => match action.value {
                 90 => waypoint_position.rotate(-1),
                 180 => waypoint_position.rotate(-2),
                 270 => waypoint_position.rotate(-3),
                 _ => unreachable!(),
             },
-            ActionType::Right => match action.value {
+            ActionType::RotateRight => match action.value {
                 90 => waypoint_position.rotate(1),
                 180 => waypoint_position.rotate(2),
                 270 => waypoint_position.rotate(3),
                 _ => unreachable!(),
             },
-            ActionType::Forward => {
+            ActionType::MoveForward => {
                 ship_position.x += waypoint_position.x * action.value;
                 ship_position.y += waypoint_position.y * action.value;
             }
