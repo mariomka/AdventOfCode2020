@@ -94,7 +94,7 @@ impl ShipPosition {
         self.x.abs() + self.y.abs()
     }
 
-    fn rotate(&mut self, steps: i8) {
+    fn rotate(&mut self, steps: i32) {
         let steps = if steps > 0 { steps } else { 4 + steps } as usize;
         self.face = self.face.rotate(steps);
     }
@@ -140,18 +140,8 @@ pub fn part1(input: &Vec<&str>) -> i32 {
             ActionType::MoveWest => {
                 ship_position.x -= action.value;
             }
-            ActionType::RotateLeft => match action.value {
-                90 => ship_position.rotate(-1),
-                180 => ship_position.rotate(-2),
-                270 => ship_position.rotate(-3),
-                _ => unreachable!(),
-            },
-            ActionType::RotateRight => match action.value {
-                90 => ship_position.rotate(1),
-                180 => ship_position.rotate(2),
-                270 => ship_position.rotate(3),
-                _ => unreachable!(),
-            },
+            ActionType::RotateLeft => ship_position.rotate(-1 * action.value / 90),
+            ActionType::RotateRight => ship_position.rotate(action.value / 90),
             ActionType::MoveForward => match ship_position.face {
                 CardinalPoint::North => {
                     ship_position.y += action.value;
@@ -196,18 +186,8 @@ pub fn part2(input: &Vec<&str>) -> i32 {
             ActionType::MoveWest => {
                 waypoint_position.x -= action.value;
             }
-            ActionType::RotateLeft => match action.value {
-                90 => waypoint_position.rotate(-1),
-                180 => waypoint_position.rotate(-2),
-                270 => waypoint_position.rotate(-3),
-                _ => unreachable!(),
-            },
-            ActionType::RotateRight => match action.value {
-                90 => waypoint_position.rotate(1),
-                180 => waypoint_position.rotate(2),
-                270 => waypoint_position.rotate(3),
-                _ => unreachable!(),
-            },
+            ActionType::RotateLeft => waypoint_position.rotate(-1 * action.value / 90),
+            ActionType::RotateRight => waypoint_position.rotate(action.value / 90),
             ActionType::MoveForward => {
                 ship_position.x += waypoint_position.x * action.value;
                 ship_position.y += waypoint_position.y * action.value;
