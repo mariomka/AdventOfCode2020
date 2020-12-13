@@ -15,7 +15,7 @@ pub fn part1(input: &Vec<&str>) -> usize {
     let buses = parse_buses(input[1]);
 
     let mut shorter_waiting_time = usize::max_value();
-    let mut earliest_bust = 0;
+    let mut earliest_bus = 0;
 
     for bus in buses {
         if 0 == bus {
@@ -26,11 +26,11 @@ pub fn part1(input: &Vec<&str>) -> usize {
 
         if waiting_time < shorter_waiting_time {
             shorter_waiting_time = waiting_time;
-            earliest_bust = bus;
+            earliest_bus = bus;
         }
     }
 
-    earliest_bust * shorter_waiting_time
+    earliest_bus * shorter_waiting_time
 }
 
 pub fn part2(input: &Vec<&str>) -> usize {
