@@ -1,9 +1,7 @@
 #[macro_use]
 extern crate lazy_static;
-use itertools::Itertools;
 use regex::Regex;
 
-use helpers::debug;
 use std::collections::HashMap;
 
 fn parse_line(line: &str) -> (&str, usize, &str) {
