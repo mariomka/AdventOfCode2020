@@ -6,3 +6,4 @@ edition = "2018"
 
 [dependencies]
 helpers = { path = "../helpers" }
+fxhash = "0.2.1"

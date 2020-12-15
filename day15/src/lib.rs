@@ -1,7 +1,7 @@
-use std::collections::HashMap;
+use fxhash::FxHashMap;
 
 fn calc_nth(input: &Vec<usize>, nth: usize) -> usize {
-    let mut said_numbers: HashMap<usize, usize> = HashMap::new();
+    let mut said_numbers: FxHashMap<usize, usize> = FxHashMap::default();
     let mut last_number = 0;
 
     for index in 0..nth {
