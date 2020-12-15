@@ -1,24 +1,24 @@
-use fxhash::FxHashMap;
-
 fn calc_nth(input: &Vec<usize>, nth: usize) -> usize {
-    let mut said_numbers: FxHashMap<usize, usize> = FxHashMap::default();
+    let mut said_numbers = vec![0; nth];
     let mut last_number = 0;
 
     for index in 0..nth {
         last_number = if index < input.len() {
             let number = input[index];
-            said_numbers.insert(number, index);
+            said_numbers[number] = index + 1;
 
             number
         } else {
-            let number = match said_numbers.get(&last_number) {
-                Some(last_turn) => index - 1 - last_turn,
-                None => 0,
-            };
-            said_numbers.insert(last_number, index - 1);
+            let last_index = said_numbers[last_number];
 
-            number
-        }
+            said_numbers[last_number] = index;
+
+            if 0 == last_index {
+                0
+            } else {
+                index - last_index
+            }
+        };
     }
 
     last_number
