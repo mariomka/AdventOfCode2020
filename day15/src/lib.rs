@@ -1,27 +1,21 @@
-use helpers::debug;
 use std::collections::HashMap;
 
 fn calc_nth(input: &Vec<usize>, nth: usize) -> usize {
-    let mut said: HashMap<usize, (usize, usize)> = HashMap::new();
+    let mut said_numbers: HashMap<usize, usize> = HashMap::new();
     let mut last_number = 0;
 
     for index in 0..nth {
         last_number = if index < input.len() {
             let number = input[index];
-            said.insert(number, (index, index));
+            said_numbers.insert(number, index);
 
             number
         } else {
-            let (turn_a, turn_b) = said.get(&last_number).unwrap();
-            let number = turn_a - turn_b;
-
-            if said.contains_key(&number) {
-                let previous = said.get(&number).unwrap();
-
-                said.insert(number, (index, previous.0));
-            } else {
-                said.insert(number, (index, index));
-            }
+            let number = match said_numbers.get(&last_number) {
+                Some(last_turn) => index - 1 - last_turn,
+                None => 0,
+            };
+            said_numbers.insert(last_number, index - 1);
 
             number
         }
