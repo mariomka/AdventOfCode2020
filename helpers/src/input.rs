@@ -24,6 +24,19 @@ where
         .collect()
 }
 
+pub fn parse_split_input<T: FromStr, R>(input: &str, pattern: &str) -> R
+where
+    T::Err: Debug,
+    R: FromIterator<T>,
+{
+    input
+        .split(pattern)
+        .map(|line| line.trim())
+        .filter(|line| false == line.is_empty())
+        .map(|line| line.parse().unwrap())
+        .collect()
+}
+
 pub fn parse_input<T: FromStr, R>(input: &str) -> R
 where
     T::Err: Debug,
