@@ -1,0 +1,10 @@
+[package]
+name = "day16"
+version = "0.1.0"
+authors = ["Mario Juarez <mario@mjp.one>"]
+edition = "2018"
+
+[dependencies]
+helpers = { path = "../helpers" }
+lazy_static = "1.4.0"
+regex = "1"
