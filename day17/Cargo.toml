@@ -1,0 +1,9 @@
+[package]
+name = "day17"
+version = "0.1.0"
+authors = ["Mario Juarez <mario@mjp.one>"]
+edition = "2018"
+
+[dependencies]
+helpers = { path = "../helpers" }
+itertools = "0.9.0"
