@@ -1,7 +1,7 @@
-use std::collections::HashMap;
 use std::fmt::{Display, Formatter};
 use std::ops::RangeInclusive;
 
+use fxhash::FxHashMap;
 use itertools::iproduct;
 
 #[derive(PartialEq, Debug)]
@@ -22,10 +22,10 @@ impl Display for Cube {
 }
 
 #[derive(Copy, Clone, Debug)]
-struct Bounds(i32, i32);
+struct Bounds(i8, i8);
 
 impl Bounds {
-    fn update(&mut self, number: i32) {
+    fn update(&mut self, number: i8) {
         if number < self.0 {
             self.0 = number;
         }
@@ -35,16 +35,16 @@ impl Bounds {
         }
     }
 
-    fn range(self) -> RangeInclusive<i32> {
+    fn range(self) -> RangeInclusive<i8> {
         self.0..=self.1
     }
 
-    fn next_range(self) -> RangeInclusive<i32> {
+    fn next_range(self) -> RangeInclusive<i8> {
         self.0 - 1..=self.1 + 1
     }
 }
 
-type Matrix = HashMap<(i32, i32, i32, i32), Cube>;
+type Matrix = FxHashMap<(i8, i8, i8, i8), Cube>;
 
 struct Pocket {
     x_bounds: Bounds,
@@ -61,7 +61,7 @@ impl Pocket {
             y_bounds: Bounds(0, 0),
             z_bounds: Bounds(0, 0),
             w_bounds: Bounds(0, 0),
-            matrix: HashMap::new(),
+            matrix: FxHashMap::default(),
         }
     }
 
@@ -74,10 +74,10 @@ impl Pocket {
             line.chars().enumerate().for_each(|(x, char)| {
                 if '#' == char {
                     pocket.activate_cube(
-                        x as i32 - (x_len - 2) as i32,
-                        y as i32 - (y_len - 2) as i32,
-                        0i32,
-                        0i32,
+                        x as i8 - (x_len - 2) as i8,
+                        y as i8 - (y_len - 2) as i8,
+                        0i8,
+                        0i8,
                     );
                 }
             })
@@ -86,15 +86,15 @@ impl Pocket {
         pocket
     }
 
-    fn is_active(&self, x: i32, y: i32, z: i32, w: i32) -> bool {
+    fn is_active(&self, x: i8, y: i8, z: i8, w: i8) -> bool {
         Cube::Active == *self.get(x, y, z, w)
     }
 
-    fn get(&self, x: i32, y: i32, z: i32, w: i32) -> &Cube {
+    fn get(&self, x: i8, y: i8, z: i8, w: i8) -> &Cube {
         self.matrix.get(&(x, y, z, w)).unwrap_or(&Cube::Inactive)
     }
 
-    fn activate_cube(&mut self, x: i32, y: i32, z: i32, w: i32) {
+    fn activate_cube(&mut self, x: i8, y: i8, z: i8, w: i8) {
         self.matrix.insert((x, y, z, w), Cube::Active);
         self.x_bounds.update(x);
         self.y_bounds.update(y);
@@ -135,7 +135,7 @@ impl Pocket {
         pocket
     }
 
-    fn active_neighbors(&self, x: i32, y: i32, z: i32, w: i32, with_w: bool) -> i32 {
+    fn active_neighbors(&self, x: i8, y: i8, z: i8, w: i8, with_w: bool) -> i8 {
         let x_range = x - 1..=x + 1;
         let y_range = y - 1..=y + 1;
         let z_range = z - 1..=z + 1;

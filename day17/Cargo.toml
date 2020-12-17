@@ -7,3 +7,4 @@ edition = "2018"
 [dependencies]
 helpers = { path = "../helpers" }
 itertools = "0.9.0"
+fxhash = "0.2.1"
