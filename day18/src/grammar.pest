@@ -1,0 +1,14 @@
+num = { ASCII_DIGIT }
+
+operation = _{ add | multiply }
+add      = { "+" }
+multiply = { "*" }
+
+term = _{ num | "(" ~ expr ~ ")" }
+
+expr = { term ~ (operation ~ term)* }
+
+line = { expr ~ ("\r\n" | "\n") }
+file = { SOI ~ line* ~ EOI }
+
+WHITESPACE = _{ " " | "\t" }

@@ -1,0 +1,10 @@
+[package]
+name = "day18"
+version = "0.1.0"
+authors = ["Mario Juarez <mario@mjp.one>"]
+edition = "2018"
+
+[dependencies]
+helpers = { path = "../helpers" }
+pest = "2.1.3"
+pest_derive = "2.1.0"
