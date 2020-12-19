@@ -1,170 +1,103 @@
+use std::collections::VecDeque;
+
 pub mod pest_grammar;
 
-fn calc(lhs: usize, operator: &str, rhs: usize) -> usize {
-    let res = match operator {
-        "+" => lhs + rhs,
-        "*" => lhs * rhs,
-        _ => unreachable!(),
-    };
+type Tokens<'a> = VecDeque<&'a str>;
 
-    res
-}
+pub mod part1 {
+    use super::Tokens;
 
-fn eval(expression: &str, start: usize) -> (usize, usize) {
-    let pre_expression = expression
-        .to_string()
-        .clone()
-        .replace("(", "( ")
-        .replace(")", " )");
+    pub fn solve(input: &Vec<&str>) -> usize {
+        input.iter().fold(0, |sum, line| {
+            let line = line.replace("(", "( ").replace(")", " )");
 
-    let mut last_number = None;
-    let mut last_operator = None;
-    let mut offset = 0;
+            sum + expression(&mut line.split(" ").collect())
+        })
+    }
 
-    for (index, part) in pre_expression.split(" ").enumerate().skip(start) {
-        if offset > 0 {
-            offset -= 1;
-            continue;
-        }
+    // Grammar
+    // expression = term (('+' | '*') term)*
+    // term = 0-9+ | ( expression )
 
-        match part {
-            " " => {}
-            "+" => {
-                last_operator = Some(part);
-            }
-            "*" => {
-                last_operator = Some(part);
-            }
-            "(" => {
-                let (new_offset, number) = eval(expression, index + 1);
-                offset = new_offset;
+    fn expression(tokens: &mut Tokens) -> usize {
+        let mut lhs = term(tokens);
 
-                if last_number.is_some() {
-                    let result = calc(last_number.unwrap(), last_operator.unwrap(), number);
+        loop {
+            let token = tokens.pop_front().unwrap_or("");
 
-                    last_operator = None;
-                    last_number = Some(result);
-                } else {
-                    last_number = Some(number);
+            match token {
+                "*" => {
+                    lhs = lhs * term(tokens);
                 }
-            }
-            ")" => {
-                return (index - start + 1, last_number.unwrap());
-            }
-            _ => {
-                let number = part.to_string().parse().unwrap();
-                if last_number.is_some() && last_operator.is_some() {
-                    let result = calc(last_number.unwrap(), last_operator.unwrap(), number);
-
-                    last_operator = None;
-                    last_number = Some(result);
-                } else {
-                    last_number = Some(number);
+                "+" => {
+                    lhs = lhs + term(tokens);
                 }
+                _ => return lhs,
             }
         }
     }
 
-    (0, last_number.unwrap())
+    fn term(tokens: &mut Tokens) -> usize {
+        let token = tokens.pop_front().unwrap();
+
+        if token == "(" {
+            expression(tokens)
+        } else {
+            token.parse::<usize>().unwrap()
+        }
+    }
 }
 
-fn eval2(expression: &str, start: usize, is_deep: bool, deep: usize) -> (usize, usize) {
-    let pre_expression = expression
-        .to_string()
-        .clone()
-        .replace("(", "( ")
-        .replace(")", " )");
+pub mod part2 {
+    use super::Tokens;
 
-    let mut last_number = None;
-    let mut last_operator = None;
-    let mut offset = 0;
-    let mut last_index = 0;
+    pub fn solve(input: &Vec<&str>) -> usize {
+        input.iter().fold(0, |sum, line| {
+            let line = line.replace("(", "( ").replace(")", " )");
 
-    for (index, part) in pre_expression.split(" ").enumerate().skip(start) {
-        if offset > 0 {
-            offset -= 1;
-            last_index = index;
-            continue;
-        }
-
-        match part {
-            " " => {}
-            "+" => {
-                last_operator = Some(part);
-            }
-            "*" => {
-                if is_deep {
-                    return (index - start, last_number.unwrap());
-                }
-
-                let (new_offset, number) = eval2(expression, index + 1, true, deep + 1);
-
-                offset = new_offset;
-
-                let result = calc(last_number.unwrap(), "*", number);
-
-                last_operator = None;
-                last_number = Some(result);
-            }
-            "(" => {
-                let (new_offset, number) = eval2(expression, index + 1, false, deep + 1);
-
-                offset = new_offset;
-
-                if last_number.is_some() && last_operator.is_some() {
-                    let result = calc(last_number.unwrap(), last_operator.unwrap(), number);
-
-                    last_operator = None;
-                    last_number = Some(result);
-                } else {
-                    last_number = Some(number);
-                }
-            }
-            ")" => {
-                if is_deep {
-                    return (index - start, last_number.unwrap());
-                }
-
-                return (index - start + 1, last_number.unwrap());
-            }
-            _ => {
-                let number = part.to_string().parse().unwrap();
-                if last_number.is_some() && last_operator.is_some() {
-                    let result = calc(last_number.unwrap(), last_operator.unwrap(), number);
-
-                    last_operator = None;
-                    last_number = Some(result);
-                } else {
-                    if last_number.is_some() {
-                        // it ends??
-                        continue;
-                    }
-
-                    last_number = Some(number);
-                }
-            }
-        }
-
-        last_index = index;
+            sum + expression(&mut line.split(" ").collect())
+        })
     }
 
-    if is_deep {
-        return (last_index - start, last_number.unwrap());
+    // Grammar
+    // expression = factor | factor '*' expression
+    // factor = term | term '+' expression
+    // term = 0-9+ | ( expression )
+
+    fn expression(tokens: &mut Tokens) -> usize {
+        let lhs = factor(tokens);
+
+        if tokens.len() > 0 && tokens[0] == "*" {
+            tokens.pop_front();
+            lhs * expression(tokens)
+        } else {
+            lhs
+        }
     }
 
-    (last_index - start + 1, last_number.unwrap())
-}
+    fn factor(tokens: &mut Tokens) -> usize {
+        let lhs = term(tokens);
 
-pub fn part1(input: &Vec<&str>) -> usize {
-    input
-        .iter()
-        .fold(0, |sum, expression| sum + eval(expression, 0).1)
-}
+        if tokens.len() > 0 && tokens[0] == "+" {
+            tokens.pop_front();
+            lhs + factor(tokens)
+        } else {
+            lhs
+        }
+    }
 
-pub fn part2(input: &Vec<&str>) -> usize {
-    input
-        .iter()
-        .fold(0, |sum, expression| sum + eval2(expression, 0, false, 0).1)
+    fn term(tokens: &mut Tokens) -> usize {
+        let token = tokens.pop_front().unwrap();
+
+        if token == "(" {
+            let result = expression(tokens);
+            tokens.pop_front(); // It should be a ')'
+
+            result
+        } else {
+            token.parse::<usize>().unwrap()
+        }
+    }
 }
 
 #[cfg(test)]
@@ -173,28 +106,28 @@ mod tests {
 
     #[test]
     fn test_eval_a() {
-        assert_eq!(eval("1 + 2 * 3 + 4 * 5 + 6", 0).1, 71)
+        assert_eq!(part1::solve(&vec!["1 + 2 * 3 + 4 * 5 + 6"]), 71)
     }
 
     #[test]
     fn test_eval_b() {
-        assert_eq!(eval("1 + (2 * 3) + (4 * (5 + 6))", 0).1, 51)
+        assert_eq!(part1::solve(&vec!["1 + (2 * 3) + (4 * (5 + 6))"]), 51)
     }
 
     #[test]
     fn test_eval_c() {
-        assert_eq!(eval("2 * 3 + (4 * 5)", 0).1, 26)
+        assert_eq!(part1::solve(&vec!["2 * 3 + (4 * 5)"]), 26)
     }
 
     #[test]
     fn test_eval_d() {
-        assert_eq!(eval("5 + (8 * 3 + 9 + 3 * 4 * 3)", 0).1, 437)
+        assert_eq!(part1::solve(&vec!["5 + (8 * 3 + 9 + 3 * 4 * 3)"]), 437)
     }
 
     #[test]
     fn test_eval_e() {
         assert_eq!(
-            eval("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", 0).1,
+            part1::solve(&vec!["5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"]),
             12240
         )
     }
@@ -202,30 +135,30 @@ mod tests {
     #[test]
     fn test_eval_f() {
         assert_eq!(
-            eval("((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2", 0).1,
+            part1::solve(&vec!["((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"]),
             13632
         )
     }
 
     #[test]
     fn test_eval2_a() {
-        assert_eq!(eval2("1 + (2 * 3) + (4 * (5 + 6))", 0, false, 0).1, 51)
+        assert_eq!(part2::solve(&vec!["1 + (2 * 3) + (4 * (5 + 6))"]), 51)
     }
 
     #[test]
     fn test_eval2_b() {
-        assert_eq!(eval2("2 * 3 + (4 * 5)", 0, false, 0).1, 46)
+        assert_eq!(part2::solve(&vec!["2 * 3 + (4 * 5)"]), 46)
     }
 
     #[test]
     fn test_eval2_c() {
-        assert_eq!(eval2("5 + (8 * 3 + 9 + 3 * 4 * 3)", 0, false, 0).1, 1445)
+        assert_eq!(part2::solve(&vec!["5 + (8 * 3 + 9 + 3 * 4 * 3)"]), 1445)
     }
 
     #[test]
     fn test_eval2_d() {
         assert_eq!(
-            eval2("5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))", 0, false, 0).1,
+            part2::solve(&vec!["5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))"]),
             669060
         )
     }
@@ -233,13 +166,7 @@ mod tests {
     #[test]
     fn test_eval2_e() {
         assert_eq!(
-            eval2(
-                "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
-                0,
-                false,
-                0
-            )
-            .1,
+            part2::solve(&vec!["((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2"]),
             23340
         )
     }
